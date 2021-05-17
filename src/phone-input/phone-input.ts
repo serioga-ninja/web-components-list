@@ -133,6 +133,6 @@ customElements.define('phone-input', class extends HTMLElement {
   }
 
   cleanValue(value?: string): string {
-    return !value ? '' : value.match(/([\d])/g).join('');
+    return !value ? '' : value.match(/([\d])/g)?.join('') || '';
   }
 });

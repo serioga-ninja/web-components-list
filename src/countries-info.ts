@@ -1139,6 +1139,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Ukraine',
     ISO2: 'UA',
     phoneCode: 380,
+    phoneMask: '\d\d-\d\d\d-\d\d-\d\d'
   },
   {
     countryName: 'United Arab Emirates',
