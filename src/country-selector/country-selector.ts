@@ -1,4 +1,4 @@
-import { countriesInfo } from './countries-info';
+import { countriesInfo } from '../countries-info';
 import './country-selector.less';
 
 type TAttributes = 'country-code' | 'country-phone-code';

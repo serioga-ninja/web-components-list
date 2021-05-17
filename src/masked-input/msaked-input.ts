@@ -55,7 +55,6 @@ customElements.define('masked-input', class extends HTMLElement {
     }
   }
 
-  private inputLength?: number;
   private maskedValue: string;
   private inputElement: HTMLInputElement;
 
@@ -67,56 +66,60 @@ customElements.define('masked-input', class extends HTMLElement {
     this.inputElement.addEventListener('input', this.onInputEvent.bind(this));
   }
 
-  initialize() {
-    this.inputLength = this.pattern.match(/([d|w])/g)?.length;
-
-    if (!this.inputLength) {
-      console.error(`Bad pattern "${this.pattern}" for masked-input`);
-    }
-  }
-
-  connectedCallback() {
-    this.initialize();
-  }
-
-  attributeChangedCallback(attrName: TAttributes, _oldVal: string, newVal: string) {
+  attributeChangedCallback(attrName: TAttributes) {
     switch (attrName) {
       case 'value':
-        if (newVal !== this.value) {
-          this.initialize();
-        }
+      case 'pattern':
+        this.onInputEvent();
         break;
     }
   }
 
-  onInputEvent(ev: InputEvent) {
-    if (this.inputLength !== this.inputValue.length) {
-      this.invalid = true;
-      this.inputValue = this.cleanValue(this.inputValue);
-      this.value = '';
+  onInputEvent() {
+    const valid = this.isValid();
 
-      return;
-    }
-
-    this.generateMaskedValue();
-    this.invalid = !(new RegExp(this.pattern).test(this.maskedValue));
-
-    if (!this.invalid) {
+    if (valid) {
       this.value = this.inputValue;
       this.inputValue = this.maskedValue;
     } else {
+      this.invalid = this.invalid;
       this.value = '';
       this.inputValue = this.cleanValue(this.inputValue);
     }
   }
 
-  generateMaskedValue() {
-    const inputValue = this.inputValue.split('');
-    this.maskedValue = this.pattern;
-    const entries = this.pattern.match(/([\\d|\\w])/g);
+  isValid(): boolean {
+    this.generateMaskedValue();
 
-    for (const c in entries) {
-      this.maskedValue = this.maskedValue.replace(`\\d`, inputValue.shift());
+    if (!this.pattern) {
+      this.invalid = false;
+
+      return true;
+    }
+
+    const invalid = !(new RegExp(this.pattern).test(this.maskedValue));
+
+    this.invalid = invalid;
+
+    return !invalid;
+  }
+
+  generateMaskedValue() {
+    if (!this.pattern) {
+      this.maskedValue = this.inputValue;
+
+      return;
+    }
+
+    const inputValue = this.inputValue.split('');
+    const entries = this.pattern.match(/([d|w])/g);
+
+    this.maskedValue = this.pattern;
+
+    for (const c of entries) {
+      if (inputValue.length === 0) break;
+
+      this.maskedValue = this.maskedValue.replace(`\\${c}`, inputValue.shift());
     }
 
     this.maskedValue = this.maskedValue.replace(/\\/g, '');
