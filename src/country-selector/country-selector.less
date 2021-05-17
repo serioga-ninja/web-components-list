@@ -9,31 +9,20 @@
 // Height variables (appears count calculates by raw css)
 @height2: 11px; // Appears 2 times
 
-#thisss:active {
-  -webkit-appearance: none;
-  appearance: none;
-  color: white;
-  border-color: black;
-  background-color: black;
-}
-
-ul.countries-list {
-  list-style: none;
-}
-
-.country {
+countries-select {
   margin: 0 auto;
   position: relative;
-  width: 400px;
+  width: fit-content;
+  display: block;
 
   .select {
     background: @color0;
     border: 1px solid @color1;
     cursor: pointer;
     height: 40px;
+    width: 40px;
     line-height: 40px;
     overflow: hidden;
-    padding: 0 35px 0 20px;
     position: relative;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -50,8 +39,18 @@ ul.countries-list {
     overflow-y: scroll;
     position: absolute;
     top: 39px;
-    width: 100%;
+    width: 260px;
     z-index: 1;
+
+    &.visible {
+      display: block;
+
+    }
+
+    ul.countries-list {
+      list-style: none;
+      padding-left: 0;
+    }
 
     li {
       color: #828282;
@@ -59,7 +58,7 @@ ul.countries-list {
       font-size: 13px;
       font-weight: 400;
       line-height: 34px;
-      padding: 0 20px;
+      padding: 0;
 
       &:first-child {
         margin-top: 12px;
@@ -80,7 +79,6 @@ ul.countries-list {
     }
   }
 }
-
 
 .flag {
   width: 16px;
