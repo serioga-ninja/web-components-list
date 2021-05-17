@@ -1,12 +1,11 @@
 /**
  * Mask legend
  * \d - number
- * \w - string
  */
 
 type TAttributes = 'pattern' | 'value';
 
-customElements.define('masked-input', class extends HTMLElement {
+customElements.define('phone-input', class extends HTMLElement {
   static get observedAttributes() {
     return [
       'value', // input value
@@ -76,6 +75,9 @@ customElements.define('masked-input', class extends HTMLElement {
   }
 
   onInputEvent() {
+    this.processInputValue();
+    this.generateMaskedValue();
+
     const valid = this.isValid();
 
     if (valid) {
@@ -88,16 +90,18 @@ customElements.define('masked-input', class extends HTMLElement {
     }
   }
 
-  isValid(): boolean {
-    this.generateMaskedValue();
+  processInputValue() {
+    this.inputValue = this.cleanValue(this.inputValue);
+  }
 
+  isValid(): boolean {
     if (!this.pattern) {
       this.invalid = false;
 
       return true;
     }
 
-    const invalid = !(new RegExp(this.pattern).test(this.maskedValue));
+    const invalid = !(new RegExp(`^${this.pattern}$`).test(this.maskedValue));
 
     this.invalid = invalid;
 
@@ -112,20 +116,23 @@ customElements.define('masked-input', class extends HTMLElement {
     }
 
     const inputValue = this.inputValue.split('');
-    const entries = this.pattern.match(/([d|w])/g);
+    const entries = this.pattern.match(/([d])/g);
 
     this.maskedValue = this.pattern;
 
-    for (const c of entries) {
-      if (inputValue.length === 0) break;
+    for (const num of inputValue) {
+      if (entries.length === 0) {
+        this.maskedValue += num;
+      } else {
+        this.maskedValue = this.maskedValue.replace(`\\${entries.shift()}`, num);
+      }
 
-      this.maskedValue = this.maskedValue.replace(`\\${c}`, inputValue.shift());
     }
 
     this.maskedValue = this.maskedValue.replace(/\\/g, '');
   }
 
   cleanValue(value?: string): string {
-    return !value ? '' : value.match(/([\d|\w])/g).join('');
+    return !value ? '' : value.match(/([\d])/g).join('');
   }
 });
