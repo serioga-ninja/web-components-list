@@ -84,7 +84,6 @@ export class PhoneInput extends HTMLElement {
       this.value = this.inputValue;
       this.inputValue = this.maskedValue;
     } else {
-      this.invalid = this.invalid;
       this.value = '';
       this.inputValue = this.cleanValue(this.inputValue);
     }

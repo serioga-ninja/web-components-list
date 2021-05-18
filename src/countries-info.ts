@@ -1174,7 +1174,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'United States',
     ISO2: 'US',
     phoneCode: 1,
-    phoneMask: '\(\\d\\d\\d\)-\\d\\d\\d-\\d\\d\\d\\d',
+    phoneMask: '\\(\\d\\d\\d\\)-\\d\\d\\d-\\d\\d\\d\\d',
     sortOrder: -1
   },
   {
