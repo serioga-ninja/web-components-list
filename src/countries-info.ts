@@ -6,8 +6,17 @@ export interface ICountryInfoRow {
   sortOrder?: number;
 }
 
-export const countryInfoByISO = (code: string): ICountryInfoRow =>
-  countriesInfo.find(row => row.ISO2.toLowerCase() === code.toLowerCase());
+export const countryInfoByISO = (code: string): ICountryInfoRow => {
+  let res = countriesInfo.find(row => row.ISO2.toLowerCase() === code.toLowerCase());
+  if (!res) {
+    console.error(`Unknown country code "${code}". Using US code by default.`);
+
+    return countryInfoByISO('US');
+  }
+
+  return res;
+}
+
 
 export const countriesInfo: ICountryInfoRow[] = [
   {

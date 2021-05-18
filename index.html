@@ -5,6 +5,14 @@
     <title>Demo</title>
 </head>
 <body>
-<country-phone-select></country-phone-select>
+<country-phone-select
+        country-code="{Client.PrimaryPhoneCountryCode}"
+        value="{Client.PrimaryPhone}"
+        name="sys-tags-Client.PrimaryPhone"
+        data-options="Client.PrimaryPhone:false:true"
+        aria-required="true"
+        aria-disabled="false"
+        required="required"
+></country-phone-select>
 </body>
 </html>

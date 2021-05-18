@@ -120,13 +120,7 @@ export class CountrySelector extends HTMLElement {
   }
 
   selectByCountryCode(countryCode: string) {
-    let row = countryInfoByISO(countryCode);
-
-    if (!row) {
-      console.error(`Unknown country code "${countryCode}". Using US code by default.`);
-      row = countryInfoByISO('US');
-    }
-    const { phoneCode, ISO2 } = row;
+    const { phoneCode, ISO2 } = countryInfoByISO(countryCode);
 
     this.select(phoneCode, ISO2);
   }
