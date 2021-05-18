@@ -9,7 +9,7 @@ customElements.define('country-phone-select', class extends HTMLElement {
   }
 
   get countryCode() {
-    return this.getAttribute('country-code');
+    return this.getAttribute('country-code') || 'US';
   }
 
   set countryCode(value: string) {

@@ -101,9 +101,6 @@ export class CountrySelector extends HTMLElement {
       case 'country-code':
         this.selectByCountryCode(newVal);
         break;
-      case 'country-phone-code':
-        this.selectByPhoneCode(newVal);
-        break;
     }
   }
 
@@ -125,13 +122,6 @@ export class CountrySelector extends HTMLElement {
   selectByCountryCode(countryCode: string) {
     const { phoneCode, ISO2 } = countriesInfo
       .find(info => info.ISO2.toLowerCase() === countryCode.toLowerCase());
-
-    this.select(phoneCode, ISO2);
-  }
-
-  selectByPhoneCode(code: string) {
-    const { phoneCode, ISO2 } = countriesInfo
-      .find(info => info.phoneCode.toString().toLowerCase() === code.toLowerCase());
 
     this.select(phoneCode, ISO2);
   }
