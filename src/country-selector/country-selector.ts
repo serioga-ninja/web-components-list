@@ -1,4 +1,4 @@
-import { countriesInfo } from '../countries-info';
+import { countriesInfo, countryInfoByISO } from '../countries-info';
 import './country-selector.less';
 
 type TAttributes = 'country-code' | 'country-phone-code';
@@ -120,8 +120,13 @@ export class CountrySelector extends HTMLElement {
   }
 
   selectByCountryCode(countryCode: string) {
-    const { phoneCode, ISO2 } = countriesInfo
-      .find(info => info.ISO2.toLowerCase() === countryCode.toLowerCase());
+    let row = countryInfoByISO(countryCode);
+
+    if (!row) {
+      console.error(`Unknown country code "${countryCode}". Using US code by default.`);
+      row = countryInfoByISO('US');
+    }
+    const { phoneCode, ISO2 } = row;
 
     this.select(phoneCode, ISO2);
   }
