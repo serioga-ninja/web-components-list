@@ -7,7 +7,9 @@ export interface ICountryInfoRow {
 }
 
 export const countryInfoByISO = (code: string): ICountryInfoRow => {
-  let res = countriesInfo.find(row => row.ISO2.toLowerCase() === code.toLowerCase());
+  code = code.trim().toLowerCase();
+
+  let res = countriesInfo.find(row => row.ISO2.toLowerCase() === code);
   if (!res) {
     console.error(`Unknown country code "${code}". Using US code by default.`);
 
