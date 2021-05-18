@@ -1,5 +1,7 @@
 import './country-phone-select.less';
-import { countriesInfo } from '../countries-info';
+import { countryInfoByISO } from '../countries-info';
+import { CountrySelector } from '../country-selector/country-selector';
+import { PhoneInput } from '../phone-input/phone-input';
 
 customElements.define('country-phone-select', class extends HTMLElement {
   static get observedAttributes() {
@@ -11,7 +13,9 @@ customElements.define('country-phone-select', class extends HTMLElement {
   }
 
   set countryCode(value: string) {
-    this.setAttribute('country-code', value);
+    if (this.countryCode !== value) {
+      this.setAttribute('country-code', value);
+    }
   }
 
   get countryPhoneCode() {
@@ -19,29 +23,43 @@ customElements.define('country-phone-select', class extends HTMLElement {
   }
 
   set countryPhoneCode(value: string) {
-    this.setAttribute('country-phone-code', value);
+    if (this.countryPhoneCode !== value) {
+      this.setAttribute('country-phone-code', value);
+    }
   }
 
   get invalid() {
-    return (this.getElementsByTagName('phone-number') as any).invalid;
+    return this.phoneInput.invalid;
   }
 
+  get value() {
+    return this.phoneInput.value;
+  }
+
+  set value(value: string) {
+    this.phoneInput.value = value;
+  }
+
+  phoneInput: PhoneInput;
   countryObserver: MutationObserver;
   phoneObserver: MutationObserver;
 
   constructor() {
     super();
 
-    this.countryObserver = new MutationObserver((mutation) => {
-
+    this.countryObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'country-code') {
+          this.onCountryChange(mutation.target as CountrySelector);
+        }
+      });
     });
   }
 
   render() {
-    const { phoneMask } = countriesInfo
-      .find(row => row.ISO2.toLowerCase() === this.countryCode.toLowerCase())
+    const { phoneMask } = countryInfoByISO(this.countryCode);
 
-    this.innerHTML = `
+    this.innerHTML = String.raw`
       <countries-select 
         country-phone-code="${this.countryPhoneCode}"
         country-code="${this.countryCode}" 
@@ -54,6 +72,21 @@ customElements.define('country-phone-select', class extends HTMLElement {
 
   connectedCallback() {
     this.render();
+
+    this.countryObserver.observe(this.getElementsByTagName('countries-select')[0], {
+      attributes: true
+    });
+
+    this.phoneInput = this.getElementsByTagName('phone-input')[0] as PhoneInput;
+  }
+
+  onCountryChange(elem: CountrySelector) {
+    const { phoneMask, phoneCode, ISO2 } = countryInfoByISO(elem.countryCode);
+
+    this.countryCode = ISO2;
+    this.countryPhoneCode = phoneCode.toString();
+
+    this.phoneInput.pattern = phoneMask;
   }
 
 });

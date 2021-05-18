@@ -3,7 +3,11 @@ export interface ICountryInfoRow {
   ISO2: string;
   phoneCode: string | number;
   phoneMask?: string;
+  sortOrder?: number;
 }
+
+export const countryInfoByISO = (code: string): ICountryInfoRow =>
+  countriesInfo.find(row => row.ISO2.toLowerCase() === code.toLowerCase());
 
 export const countriesInfo: ICountryInfoRow[] = [
   {
@@ -70,12 +74,14 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Australia',
     ISO2: 'AU',
     phoneCode: 61,
-    phoneMask: '\d\d\d\d \d\d\d \d\d\d'
+    phoneMask: '\\d\\d\\d\\d \\d\\d\\d \\d\\d\\d',
+    sortOrder: 3
   },
   {
     countryName: 'Austria',
     ISO2: 'AT',
     phoneCode: 43,
+    sortOrder: 15
   },
   {
     countryName: 'Azerbaijan',
@@ -91,6 +97,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Bahrain',
     ISO2: 'BH',
     phoneCode: 973,
+    sortOrder: 14
   },
   {
     countryName: 'Bangladesh',
@@ -196,7 +203,8 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Canada',
     ISO2: 'CA',
     phoneCode: 1,
-    phoneMask: '\d\d\d-\d\d\d-\d\d\d\d'
+    phoneMask: '\\d\\d\\d-\\d\\d\\d-\\d\\d\\d\\d',
+    sortOrder: 2
   },
   {
     countryName: 'Cape Verde',
@@ -397,7 +405,8 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Germany',
     ISO2: 'DE',
     phoneCode: 49,
-    phoneMask: '\d\d\d\d\d-\d\d\d\d'
+    phoneMask: '\\d\\d\\d\\d\\d-\\d\\d\\d\\d',
+    sortOrder: 6
   },
   {
     countryName: 'Ghana',
@@ -503,6 +512,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Ireland',
     ISO2: 'IE',
     phoneCode: 353,
+    sortOrder: 13
   },
   {
     countryName: 'Isle of Man',
@@ -533,7 +543,8 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Japan',
     ISO2: 'JP',
     phoneCode: 81,
-    phoneMask: '\d\d\d\d\d-\d\d\d\d'
+    phoneMask: '\\d\\d\\d\\d\\d-\\d\\d\\d\\d',
+    sortOrder: 8
   },
   {
     countryName: 'Jersey',
@@ -684,6 +695,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Mexico',
     ISO2: 'MX',
     phoneCode: 52,
+    sortOrder: 11
   },
   {
     countryName: 'Micronesia',
@@ -764,6 +776,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'New Zealand',
     ISO2: 'NZ',
     phoneCode: 64,
+    sortOrder: 10
   },
   {
     countryName: 'Nicaragua',
@@ -799,6 +812,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Norway',
     ISO2: 'NO',
     phoneCode: 47,
+    sortOrder: 9
   },
   {
     countryName: 'Oman',
@@ -1019,6 +1033,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Spain',
     ISO2: 'ES',
     phoneCode: 34,
+    sortOrder: 7
   },
   {
     countryName: 'Sri Lanka',
@@ -1054,6 +1069,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Switzerland',
     ISO2: 'CH',
     phoneCode: 41,
+    sortOrder: 5
   },
   {
     countryName: 'Syria',
@@ -1099,6 +1115,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Trinidad and Tobago',
     ISO2: 'TT',
     phoneCode: '1-868',
+    sortOrder: 12
   },
   {
     countryName: 'Tunisia',
@@ -1139,7 +1156,7 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'Ukraine',
     ISO2: 'UA',
     phoneCode: 380,
-    phoneMask: '\d\d-\d\d\d-\d\d-\d\d'
+    phoneMask: `\\d\\d-\\d\\d\\d-\\d\\d-\\d\\d`
   },
   {
     countryName: 'United Arab Emirates',
@@ -1150,13 +1167,15 @@ export const countriesInfo: ICountryInfoRow[] = [
     countryName: 'United Kingdom',
     ISO2: 'GB',
     phoneCode: 44,
-    phoneMask: '\d\d\d \d\d\d\d \d\d\d\d'
+    phoneMask: '\\d\\d\\d \\d\\d\\d\\d \\d\\d\\d\\d',
+    sortOrder: 1
   },
   {
     countryName: 'United States',
     ISO2: 'US',
     phoneCode: 1,
-    phoneMask: '\d\d\d-\d\d\d-\d\d\d\d'
+    phoneMask: '\(\\d\\d\\d\)-\\d\\d\\d-\\d\\d\\d\\d',
+    sortOrder: -1
   },
   {
     countryName: 'Uruguay',

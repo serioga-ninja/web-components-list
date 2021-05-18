@@ -6,6 +6,14 @@ type TAttributes = 'country-code' | 'country-phone-code';
 const isVisible = (elem: HTMLElement) => !!elem && !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
 
 const htmlRows = countriesInfo
+  .sort((a, b) => {
+    const aSortOrder = a.sortOrder || 1000;
+    const bSortOrder = b.sortOrder || 1000;
+
+    if (aSortOrder < bSortOrder) return -1;
+    else if (aSortOrder > bSortOrder) return 1;
+    else return 1;
+  })
   .map(row => {
     return `<li class="list-row" data-code="${row.phoneCode}" data-name="${row.countryName}" data-iso2="${row.ISO2}"">
                 <i class="flag flag-${row.ISO2.toLowerCase()}"></i>
@@ -21,7 +29,7 @@ tmpl.innerHTML = `
   </div>
 `;
 
-customElements.define('countries-select', class extends HTMLElement {
+export class CountrySelector extends HTMLElement {
   static get observedAttributes() {
     return ['country-code', 'country-phone-code'];
   }
@@ -133,4 +141,6 @@ customElements.define('countries-select', class extends HTMLElement {
 
     this.select(code, iso2);
   }
-});
+}
+
+customElements.define('countries-select', CountrySelector);

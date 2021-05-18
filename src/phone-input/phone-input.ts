@@ -5,7 +5,7 @@
 
 type TAttributes = 'pattern' | 'value';
 
-customElements.define('phone-input', class extends HTMLElement {
+export class PhoneInput extends HTMLElement {
   static get observedAttributes() {
     return [
       'value', // input value
@@ -135,4 +135,6 @@ customElements.define('phone-input', class extends HTMLElement {
   cleanValue(value?: string): string {
     return !value ? '' : value.match(/([\d])/g)?.join('') || '';
   }
-});
+}
+
+customElements.define('phone-input', PhoneInput);
