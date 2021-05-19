@@ -1,39 +1,20 @@
+import { HtmlElementBase } from '../html-element-base';
+
+type TAttributes = 'pattern' | 'value' | 'disabled';
+
 /**
  * Mask legend
  * \d - number
  */
 
-type TAttributes = 'pattern' | 'value';
-
-export class PhoneInput extends HTMLElement {
+export class PhoneInput extends HtmlElementBase {
   static get observedAttributes() {
     return [
       'value', // input value
       'pattern', // mask,
       'invalid', // validation
+      'disabled',
     ];
-  }
-
-  get invalid() {
-    return !!this.getAttribute('invalid');
-  }
-
-  set invalid(value: boolean) {
-    if (value) {
-      this.setAttribute('invalid', '');
-    } else {
-      this.removeAttribute('invalid');
-    }
-  }
-
-  get value() {
-    return this.getAttribute('value');
-  }
-
-  set value(value: string) {
-    if (value !== this.value) {
-      this.setAttribute('value', value);
-    }
   }
 
   get inputValue() {
@@ -65,11 +46,18 @@ export class PhoneInput extends HTMLElement {
     this.inputElement.addEventListener('input', this.onInputEvent.bind(this));
   }
 
-  attributeChangedCallback(attrName: TAttributes) {
+  attributeChangedCallback(attrName: TAttributes, oldValue, newValue) {
     switch (attrName) {
       case 'value':
       case 'pattern':
         this.onInputEvent();
+        break;
+      case 'disabled':
+        if (newValue) {
+          this.inputElement.setAttribute('disabled', 'disabled');
+        } else {
+          this.inputElement.removeAttribute('disabled');
+        }
         break;
     }
   }

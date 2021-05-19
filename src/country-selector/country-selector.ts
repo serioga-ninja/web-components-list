@@ -1,5 +1,6 @@
 import { countriesInfo, countryInfoByISO } from '../countries-info';
 import './country-selector.less';
+import { HtmlElementBase } from '../html-element-base';
 
 type TAttributes = 'country-code' | 'country-phone-code';
 
@@ -21,15 +22,7 @@ const htmlRows = countriesInfo
             </li>`
   })
 
-const tmpl = document.createElement('template');
-tmpl.innerHTML = `
-  <div class="select country-result"></div>
-  <div class="dropdown">
-    <ul class="countries-list">${htmlRows.join('')}</ul>
-  </div>
-`;
-
-export class CountrySelector extends HTMLElement {
+export class CountrySelector extends HtmlElementBase {
   static get observedAttributes() {
     return ['country-code', 'country-phone-code'];
   }
@@ -62,7 +55,12 @@ export class CountrySelector extends HTMLElement {
   constructor() {
     super();
 
-    this.innerHTML = tmpl.innerHTML;
+    this.innerHTML = String.raw`
+      <div class="select country-result"></div>
+      <div class="dropdown">
+        <ul class="countries-list">${htmlRows.join('')}</ul>
+      </div>
+    `;
 
     this.result = this.getElementsByClassName('country-result')[0];
     this.dropdown = this.getElementsByClassName('dropdown')[0];

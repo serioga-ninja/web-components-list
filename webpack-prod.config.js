@@ -8,7 +8,7 @@ module.exports = {
   mode: 'production',
   output: {
     path: output,
-    filename: 'custom-elements.min.js'
+    filename: 'custom-elements.js'
   },
   devServer: {
     contentBase: output,
