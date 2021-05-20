@@ -46,8 +46,11 @@ export class PhoneInput extends HtmlElementBase {
     this.inputElement.addEventListener('input', this.onInputEvent.bind(this));
 
     if (this.disabled) {
-      this.inputElement.disabled = true;
       this.inputElement.setAttribute('disabled', '');
+    }
+
+    if (this.required) {
+      this.inputElement.setAttribute('required', '');
     }
   }
 
