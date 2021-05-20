@@ -62,6 +62,7 @@ customElements.define('country-phone-select', class extends HtmlElementBase {
         country-code="${this.countryCode}" 
       ></countries-select>
       <phone-input
+        value="${this.value}"
         pattern="${phoneMask || ''}"
       ></phone-input>
     `;

@@ -41,7 +41,7 @@ export class PhoneInput extends HtmlElementBase {
   constructor() {
     super();
 
-    this.innerHTML = '<input type="text" />';
+    this.innerHTML = `<input type="text" value="${this.value}" />`;
     this.inputElement = this.getElementsByTagName('input')[0];
     this.inputElement.addEventListener('input', this.onInputEvent.bind(this));
 
