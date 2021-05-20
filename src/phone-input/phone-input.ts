@@ -44,6 +44,11 @@ export class PhoneInput extends HtmlElementBase {
     this.innerHTML = '<input type="text" />';
     this.inputElement = this.getElementsByTagName('input')[0];
     this.inputElement.addEventListener('input', this.onInputEvent.bind(this));
+
+    if (this.disabled) {
+      this.inputElement.disabled = true;
+      this.inputElement.setAttribute('disabled', '');
+    }
   }
 
   attributeChangedCallback(attrName: TAttributes, oldValue, newValue) {
@@ -53,7 +58,7 @@ export class PhoneInput extends HtmlElementBase {
         this.onInputEvent();
         break;
       case 'disabled':
-        if (newValue) {
+        if (newValue !== null && newValue !== undefined) {
           this.inputElement.setAttribute('disabled', 'disabled');
         } else {
           this.inputElement.removeAttribute('disabled');

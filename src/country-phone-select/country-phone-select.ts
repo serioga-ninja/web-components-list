@@ -73,8 +73,11 @@ customElements.define('country-phone-select', class extends HtmlElementBase {
 
     switch (attrName) {
       case 'disabled':
-        this.phoneInput.disabled = newVal;
-        this.countrySelector.disabled = newVal;
+        if (newVal) {
+          this.setDisabledForChild();
+        } else {
+          this.removeDisabledForChild();
+        }
         break;
     }
   }
@@ -85,8 +88,9 @@ customElements.define('country-phone-select', class extends HtmlElementBase {
     this.phoneInput = this.getElementsByTagName('phone-input')[0] as PhoneInput;
     this.countrySelector = this.getElementsByTagName('countries-select')[0] as CountrySelector;
 
-    this.phoneInput.disabled = this.disabled;
-    this.countrySelector.disabled = this.disabled;
+    if (this.disabled) {
+      this.setDisabledForChild();
+    }
 
     this.countryObserver.observe(this.getElementsByTagName('countries-select')[0], {
       attributes: true
@@ -95,6 +99,16 @@ customElements.define('country-phone-select', class extends HtmlElementBase {
     this.phoneObserver.observe(this.phoneInput, {
       attributes: true
     });
+  }
+
+  setDisabledForChild() {
+    this.phoneInput.setAttribute('disabled', '');
+    this.countrySelector.setAttribute('disabled', '');
+  }
+
+  removeDisabledForChild() {
+    this.phoneInput.removeAttribute('disabled');
+    this.countrySelector.removeAttribute('disabled');
   }
 
   onPhoneChange(elem: PhoneInput) {

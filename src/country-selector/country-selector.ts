@@ -79,6 +79,7 @@ export class CountrySelector extends HtmlElementBase {
 
     this.result.addEventListener('click', (ev) => {
       ev.stopPropagation();
+      if (this.disabled) return;
 
       this.dropDownVisible = !this.dropDownVisible;
 

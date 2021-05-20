@@ -27,6 +27,13 @@ countries-select {
     white-space: nowrap;
   }
 
+  &[disabled] {
+    .select {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+
   .dropdown {
     background: @color0;
     border-top: 1px solid @color1;
