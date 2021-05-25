@@ -22,6 +22,8 @@ export const countryInfoByISO = (code: string): ICountryInfoRow => {
 export const countryInfoByPhoneCode = (code: number | string): ICountryInfoRow => {
   code = code.toString().trim().toLowerCase();
 
+  if (code === '1') return countryInfoByISO('US');
+
   let res = countriesInfo.find(row => row.phoneCode.toString().toLowerCase() === code);
   if (!res) {
     console.error(`Unknown phone code "${code}". Using US code by default.`);
