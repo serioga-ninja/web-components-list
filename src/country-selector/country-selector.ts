@@ -1,4 +1,4 @@
-import { countriesInfo, countryInfoByISO } from '../countries-info';
+import { countriesInfo, countryInfoByISO, countryInfoByPhoneCode } from '../countries-info';
 import './country-selector.less';
 import { HtmlElementBase } from '../html-element-base';
 
@@ -100,6 +100,9 @@ export class CountrySelector extends HtmlElementBase {
       case 'country-code':
         this.selectByCountryCode(newVal);
         break;
+      case 'country-phone-code':
+        this.selectByCountryPhoneCode(newVal);
+        break;
     }
   }
 
@@ -118,6 +121,12 @@ export class CountrySelector extends HtmlElementBase {
     this.result.innerHTML = `<i class="flag flag-${iso2.toLowerCase()}"></i>`;
   }
 
+  selectByCountryPhoneCode(countryPhoneCode: string) {
+    const { phoneCode, ISO2 } = countryInfoByPhoneCode(countryPhoneCode);
+
+    this.select(phoneCode, ISO2);
+  }
+
   selectByCountryCode(countryCode: string) {
     const { phoneCode, ISO2 } = countryInfoByISO(countryCode);
 
@@ -131,4 +140,7 @@ export class CountrySelector extends HtmlElementBase {
   }
 }
 
-customElements.define('countries-select', CountrySelector);
+
+if (!customElements.get('countries-select')) {
+  customElements.define('countries-select', CountrySelector);
+}

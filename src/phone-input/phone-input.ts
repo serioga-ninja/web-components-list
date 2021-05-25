@@ -132,4 +132,6 @@ export class PhoneInput extends HtmlElementBase {
   }
 }
 
-customElements.define('phone-input', PhoneInput);
+if (!customElements.get('phone-input')) {
+  customElements.define('phone-input', PhoneInput);
+}

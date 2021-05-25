@@ -19,6 +19,19 @@ export const countryInfoByISO = (code: string): ICountryInfoRow => {
   return res;
 }
 
+export const countryInfoByPhoneCode = (code: number | string): ICountryInfoRow => {
+  code = code.toString().trim().toLowerCase();
+
+  let res = countriesInfo.find(row => row.phoneCode.toString().toLowerCase() === code);
+  if (!res) {
+    console.error(`Unknown phone code "${code}". Using US code by default.`);
+
+    return countryInfoByPhoneCode(1);
+  }
+
+  return res;
+}
+
 
 export const countriesInfo: ICountryInfoRow[] = [
   {

@@ -1,16 +1,16 @@
 import './country-phone-select.less';
-import { countryInfoByISO } from '../countries-info';
+import { countryInfoByISO, countryInfoByPhoneCode } from '../countries-info';
 import { CountrySelector } from '../country-selector/country-selector';
 import { HtmlElementBase } from '../html-element-base';
 import { PhoneInput } from '../phone-input/phone-input';
 
-customElements.define('country-phone-select', class extends HtmlElementBase {
+export class CountryPhoneSelect extends HtmlElementBase {
   static get observedAttributes() {
     return ['value', 'country-code', 'country-phone-code', 'disabled', 'required'];
   }
 
   get countryCode() {
-    return this.getAttribute('country-code') || 'US';
+    return this.getAttribute('country-code');
   }
 
   set countryCode(value: string) {
@@ -33,10 +33,12 @@ customElements.define('country-phone-select', class extends HtmlElementBase {
   countrySelector: CountrySelector;
   countryObserver: MutationObserver;
   phoneObserver: MutationObserver;
+  parentForm: HTMLFormElement;
 
   constructor() {
     super();
 
+    this.parentForm = this.closest<HTMLFormElement>('form');
     this.countryObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes') {
@@ -54,12 +56,16 @@ customElements.define('country-phone-select', class extends HtmlElementBase {
   }
 
   render() {
-    const { phoneMask } = countryInfoByISO(this.countryCode);
+    const {
+      phoneMask,
+      phoneCode,
+      ISO2
+    } = this.countryCode ? countryInfoByISO(this.countryCode) : countryInfoByPhoneCode(this.countryPhoneCode);
 
     this.innerHTML = String.raw`
       <countries-select
-        country-phone-code="${this.countryPhoneCode}"
-        country-code="${this.countryCode}" 
+        country-phone-code="${phoneCode}"
+        country-code="${ISO2}" 
       ></countries-select>
       <phone-input
         value="${this.value}"
@@ -75,9 +81,9 @@ customElements.define('country-phone-select', class extends HtmlElementBase {
     switch (attrName) {
       case 'disabled':
         if (newVal) {
-          this.setAttributeForChild();
+          this.setAttributeForChild('disabled');
         } else {
-          this.removeAttributeForChild();
+          this.removeAttributeForChild('disabled');
         }
         break;
     }
@@ -128,5 +134,8 @@ customElements.define('country-phone-select', class extends HtmlElementBase {
 
     this.phoneInput.pattern = phoneMask;
   }
+}
 
-});
+if (!customElements.get('country-phone-select')) {
+  customElements.define('country-phone-select', CountryPhoneSelect);
+}
