@@ -60,7 +60,11 @@ export class CountryPhoneSelect extends HtmlElementBase {
       phoneMask,
       phoneCode,
       ISO2
-    } = this.countryCode ? countryInfoByISO(this.countryCode) : countryInfoByPhoneCode(this.countryPhoneCode);
+    } = (() => {
+      if (!this.countryCode && !this.countryPhoneCode) return countryInfoByISO('US');
+
+      return this.countryCode ? countryInfoByISO(this.countryCode) : countryInfoByPhoneCode(this.countryPhoneCode);
+    })();
 
     this.innerHTML = String.raw`
       <countries-select
