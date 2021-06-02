@@ -70,6 +70,7 @@ export class CountryPhoneSelect extends HtmlElementBase {
       <countries-select
         country-phone-code="${phoneCode}"
         country-code="${ISO2}" 
+        phone-number="${this.value}"
       ></countries-select>
       <phone-input
         value="${this.value}"
@@ -128,6 +129,8 @@ export class CountryPhoneSelect extends HtmlElementBase {
   onPhoneChange(elem: PhoneInput) {
     this.value = elem.value;
     this.invalid = elem.invalid;
+
+    this.countrySelector.setAttribute('phone-number', elem.value);
   }
 
   onCountryChange(elem: CountrySelector) {

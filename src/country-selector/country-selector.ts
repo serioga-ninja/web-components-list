@@ -1,8 +1,14 @@
-import { countriesInfo, countryInfoByISO, countryInfoByPhoneCode } from '../countries-info';
+import {
+  countriesInfo,
+  countryInfoByAreaCode,
+  countryInfoByISO,
+  countryInfoByPhoneCode,
+  ICountryInfoRow
+} from '../countries-info';
 import './country-selector.less';
 import { HtmlElementBase } from '../html-element-base';
 
-type TAttributes = 'country-code' | 'country-phone-code';
+type TAttributes = 'country-code' | 'country-phone-code' | 'phone-number';
 
 const isVisible = (elem: HTMLElement) => !!elem && !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
 
@@ -24,7 +30,7 @@ const htmlRows = countriesInfo
 
 export class CountrySelector extends HtmlElementBase {
   static get observedAttributes() {
-    return ['country-code', 'country-phone-code'];
+    return ['country-code', 'country-phone-code', 'phone-number'];
   }
 
   get countryCode() {
@@ -103,6 +109,9 @@ export class CountrySelector extends HtmlElementBase {
       case 'country-phone-code':
         this.selectByCountryPhoneCode(newVal);
         break;
+      case 'phone-number':
+        this.updateByPhoneNumber(newVal);
+        break;
     }
   }
 
@@ -137,6 +146,14 @@ export class CountrySelector extends HtmlElementBase {
     const { code, iso2 } = element.dataset;
 
     this.select(code, iso2);
+  }
+
+  updateByPhoneNumber(phoneNumber: string) {
+    const phone = countryInfoByAreaCode(phoneNumber);
+
+    if (phone) {
+      this.select(phone.phoneCode, phone.ISO2);
+    }
   }
 }
 
