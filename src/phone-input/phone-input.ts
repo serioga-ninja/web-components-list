@@ -22,7 +22,14 @@ export class PhoneInput extends HtmlElementBase {
   }
 
   set inputValue(value: string) {
+    // store current positions in variables
+    const start = this.inputElement.selectionStart;
+    const end = this.inputElement.selectionEnd;
+
     this.inputElement.value = value;
+
+    // restore from variables...
+    this.inputElement.setSelectionRange(start, end);
   }
 
   get pattern() {
