@@ -1,12 +1,12 @@
 import './country-phone-select.less';
 import { countryInfoByISO, countryInfoByPhoneCode } from '../countries-info';
-import { CountrySelector } from '../country-selector/country-selector';
+import { CountrySelector, ECountrySelectorEvents } from '../country-selector/country-selector';
 import { HtmlElementBase } from '../html-element-base';
-import { PhoneInput } from '../phone-input/phone-input';
+import { EPhoneNumberEvents, PhoneInput } from '../phone-input/phone-input';
 
 export class CountryPhoneSelect extends HtmlElementBase {
   static get observedAttributes() {
-    return ['value', 'country-code', 'country-phone-code', 'disabled', 'required'];
+    return ['value', 'country-code', 'country-phone-code', 'disabled', 'required', 'name'];
   }
 
   get countryCode() {
@@ -31,28 +31,12 @@ export class CountryPhoneSelect extends HtmlElementBase {
 
   phoneInput: PhoneInput;
   countrySelector: CountrySelector;
-  countryObserver: MutationObserver;
-  phoneObserver: MutationObserver;
   parentForm: HTMLFormElement;
 
   constructor() {
     super();
 
     this.parentForm = this.closest<HTMLFormElement>('form');
-    this.countryObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes') {
-          this.onCountryChange(mutation.target as CountrySelector);
-        }
-      });
-    });
-    this.phoneObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes') {
-          this.onPhoneChange(mutation.target as PhoneInput);
-        }
-      });
-    });
   }
 
   render() {
@@ -107,12 +91,12 @@ export class CountryPhoneSelect extends HtmlElementBase {
       this.setAttributeForChild('required');
     }
 
-    this.countryObserver.observe(this.getElementsByTagName('countries-select')[0], {
-      attributes: true
+    this.countrySelector.addEventListener(ECountrySelectorEvents.ValueChanged, (event: CustomEvent<{ newValue: string; oldValue: string; }>) => {
+      this.onCountryChange(this.countrySelector);
     });
 
-    this.phoneObserver.observe(this.phoneInput, {
-      attributes: true
+    this.phoneInput.addEventListener(EPhoneNumberEvents.ValueChanged, (event: CustomEvent<{ newValue: string; oldValue: string; }>) => {
+      this.onPhoneChange(this.phoneInput);
     });
   }
 

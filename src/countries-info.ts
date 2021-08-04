@@ -7,6 +7,28 @@ export interface ICountryInfoRow {
   areaCodes?: number[];
 }
 
+export const generateMaskedNumber = (phoneNumber: string, mask?: string): string => {
+  if (!mask) return phoneNumber;
+
+  const inputValue = phoneNumber.split('');
+  const entries = mask.match(/([d])/g);
+
+  phoneNumber = mask;
+
+  for (const num of inputValue) {
+    if (entries.length === 0) {
+      phoneNumber += num;
+    } else {
+      phoneNumber = phoneNumber.replace(`\\${entries.shift()}`, num);
+    }
+
+  }
+
+  phoneNumber = phoneNumber.replace(/\\/g, '');
+
+  return phoneNumber;
+}
+
 export const countryInfoByISO = (code: string): ICountryInfoRow => {
   code = code.trim().toLowerCase();
 
@@ -39,6 +61,21 @@ export const countryInfoByAreaCode = (phoneNumber: string): ICountryInfoRow | nu
   return countriesWithAreaCodes.find((row) => {
     return row.areaCodes.find(areaCode => phoneNumber.indexOf(areaCode.toString()) === 0)
   });
+}
+
+export const countryInfoByMask = (phoneNumber: string, mask?: string): ICountryInfoRow | null => {
+  return countriesWithMasks
+    .filter(row => row.phoneMask === mask)
+    .find((row) => {
+      return maskedInputValid(
+        generateMaskedNumber(phoneNumber, mask),
+        mask
+      );
+    });
+};
+
+export const maskedInputValid = (phoneNumber: string, mask?: string): boolean => {
+  return new RegExp(`^${mask}$`).test(phoneNumber);
 }
 
 
@@ -1588,3 +1625,4 @@ export const countriesInfo: ICountryInfoRow[] = [
 ];
 
 export const countriesWithAreaCodes = countriesInfo.filter(row => row.areaCodes instanceof Array && row.areaCodes.length > 0);
+export const countriesWithMasks = countriesInfo.filter(row => row.phoneMask?.length > 0);

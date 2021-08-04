@@ -1,14 +1,17 @@
 import {
   countriesInfo,
   countryInfoByAreaCode,
-  countryInfoByISO,
-  countryInfoByPhoneCode,
-  ICountryInfoRow
+  countryInfoByISO, countryInfoByMask,
+  countryInfoByPhoneCode, generateMaskedNumber, maskedInputValid,
 } from '../countries-info';
 import './country-selector.less';
 import { HtmlElementBase } from '../html-element-base';
 
 type TAttributes = 'country-code' | 'country-phone-code' | 'phone-number';
+
+export enum ECountrySelectorEvents {
+  ValueChanged = 'valuechanged'
+}
 
 const isVisible = (elem: HTMLElement) => !!elem && !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
 
@@ -40,6 +43,15 @@ export class CountrySelector extends HtmlElementBase {
   set countryCode(value: string) {
     if (value !== this.countryCode) {
       this.setAttribute('country-code', value);
+
+
+      this.dispatchEvent(
+        new CustomEvent(ECountrySelectorEvents.ValueChanged, {
+          detail: {
+            newValue: value
+          }
+        })
+      );
     }
   }
 
@@ -103,15 +115,19 @@ export class CountrySelector extends HtmlElementBase {
 
   attributeChangedCallback(attrName: TAttributes, _oldVal, newVal: string) {
     switch (attrName) {
-      case 'country-code':
-        this.selectByCountryCode(newVal);
-        break;
-      case 'country-phone-code':
-        this.selectByCountryPhoneCode(newVal);
-        break;
       case 'phone-number':
         this.updateByPhoneNumber(newVal);
         break;
+    }
+  }
+
+  override connectedCallback() {
+    super.connectedCallback();
+
+    if (this.hasAttribute('country-code')) {
+      this.selectByCountryCode(this.getAttribute('country-code'));
+    } else if (this.hasAttribute('country-phone-code')) {
+      this.selectByCountryPhoneCode(this.getAttribute('country-phone-code'));
     }
   }
 

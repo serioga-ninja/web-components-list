@@ -54,6 +54,6 @@ export abstract class HtmlElementBase extends HTMLElement {
   }
 
   connectedCallback() {
-    this._ready = false;
+    this._ready = true;
   }
 }

@@ -1,6 +1,12 @@
+import { generateMaskedNumber } from '../countries-info';
 import { HtmlElementBase } from '../html-element-base';
 
 type TAttributes = 'pattern' | 'value' | 'disabled';
+
+export enum EPhoneNumberEvents {
+  ValueChanged = 'valuechanged'
+}
+
 
 /**
  * Mask legend
@@ -27,6 +33,7 @@ export class PhoneInput extends HtmlElementBase {
       const start = this.inputElement.selectionStart;
       const end = this.inputElement.selectionEnd;
       const last = end === this.inputElement.value.length;
+      const oldValue = this.inputElement.value;
 
       this.inputElement.value = value;
 
@@ -56,7 +63,7 @@ export class PhoneInput extends HtmlElementBase {
 
     this.innerHTML = `<input type="text" value="${this.value}" />`;
     this.inputElement = this.getElementsByTagName('input')[0];
-    this.inputElement.addEventListener('input', this.onInputEvent.bind(this));
+    this.inputElement.addEventListener('input', () => this.onInputEvent());
 
     if (this.disabled) {
       this.inputElement.setAttribute('disabled', '');
@@ -69,9 +76,8 @@ export class PhoneInput extends HtmlElementBase {
 
   attributeChangedCallback(attrName: TAttributes, oldValue, newValue) {
     switch (attrName) {
-      case 'value':
       case 'pattern':
-        this.onInputEvent();
+        this.onInputEvent(true);
         break;
       case 'disabled':
         if (newValue !== null && newValue !== undefined) {
@@ -83,7 +89,7 @@ export class PhoneInput extends HtmlElementBase {
     }
   }
 
-  onInputEvent() {
+  onInputEvent(silent = false) {
     this.processInputValue();
     this.generateMaskedValue();
 
@@ -91,15 +97,29 @@ export class PhoneInput extends HtmlElementBase {
 
     if (valid) {
       this.value = this.inputValue;
-      this.inputValue = this.maskedValue;
+      this.updateInputValue(this.maskedValue, silent);
     } else {
       this.value = '';
-      this.inputValue = this.cleanValue(this.inputValue);
+      this.updateInputValue(this.cleanValue(this.inputValue), silent);
+    }
+  }
+
+  updateInputValue(value: string, silent = false) {
+    this.inputValue = value;
+
+    if (!silent) {
+      this.dispatchEvent(
+        new CustomEvent(EPhoneNumberEvents.ValueChanged, {
+          detail: {
+            value
+          }
+        })
+      );
     }
   }
 
   processInputValue() {
-    this.inputValue = this.cleanValue(this.inputValue);
+    this.updateInputValue(this.cleanValue(this.inputValue), true);
   }
 
   isValid(): boolean {
@@ -123,25 +143,19 @@ export class PhoneInput extends HtmlElementBase {
       return;
     }
 
-    const inputValue = this.inputValue.split('');
-    const entries = this.pattern.match(/([d])/g);
-
-    this.maskedValue = this.pattern;
-
-    for (const num of inputValue) {
-      if (entries.length === 0) {
-        this.maskedValue += num;
-      } else {
-        this.maskedValue = this.maskedValue.replace(`\\${entries.shift()}`, num);
-      }
-
-    }
-
-    this.maskedValue = this.maskedValue.replace(/\\/g, '');
+    this.maskedValue = generateMaskedNumber(this.inputValue, this.pattern);
   }
 
   cleanValue(value?: string): string {
     return !value ? '' : value.match(/([\d])/g)?.join('') || '';
+  }
+
+  override connectedCallback() {
+    super.connectedCallback();
+
+    if (this.value) {
+      this.onInputEvent();
+    }
   }
 }
 
