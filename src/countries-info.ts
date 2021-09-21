@@ -7,6 +7,12 @@ export interface ICountryInfoRow {
   areaCodes?: number[];
 }
 
+export const getBrowserLanguage = (): string => {
+  const res = navigator.language.split('-');
+
+  return res[1] || res[0];
+}
+
 export const generateMaskedNumber = (phoneNumber: string, mask?: string): string => {
   if (!mask) return phoneNumber;
 
@@ -34,24 +40,31 @@ export const countryInfoByISO = (code: string): ICountryInfoRow => {
 
   let res = countriesInfo.find(row => row.ISO2.toLowerCase() === code);
   if (!res) {
-    console.error(`Unknown country code "${code}". Using US code by default.`);
+    const browserLanguage = getBrowserLanguage();
+    console.error(`Unknown country code "${code}". Using ${browserLanguage} code by default from navigator.language property.`);
 
-    return countryInfoByISO('US');
+    return countryInfoByISO(browserLanguage);
   }
 
   return res;
 }
 
 export const countryInfoByPhoneCode = (code: number | string): ICountryInfoRow => {
+  const browserLanguage = getBrowserLanguage();
+
   code = code.toString().trim().toLowerCase();
 
-  if (code === '1') return countryInfoByISO('US');
+  if (code === '1') {
+    if (browserLanguage.toLowerCase() === 'ca') return countryInfoByISO('CA');
+
+    return countryInfoByISO('US');
+  }
 
   let res = countriesInfo.find(row => row.phoneCode.toString().toLowerCase() === code);
   if (!res) {
-    console.error(`Unknown phone code "${code}". Using US code by default.`);
+    console.error(`Unknown country code "${code}". Using ${browserLanguage} code by default from navigator.language property.`);
 
-    return countryInfoByPhoneCode(1);
+    return countryInfoByISO(browserLanguage);
   }
 
   return res;
