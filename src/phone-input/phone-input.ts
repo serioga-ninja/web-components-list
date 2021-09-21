@@ -74,7 +74,9 @@ export class PhoneInput extends HtmlElementBase {
     }
   }
 
-  attributeChangedCallback(attrName: TAttributes, oldValue, newValue) {
+  attributeChangedCallback(attrName: TAttributes, oldValue?: string, newValue?: string) {
+    if (!this._ready) return;
+
     switch (attrName) {
       case 'pattern':
         this.onInputEvent(true);

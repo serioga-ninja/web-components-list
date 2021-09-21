@@ -114,6 +114,8 @@ export class CountrySelector extends HtmlElementBase {
   }
 
   attributeChangedCallback(attrName: TAttributes, _oldVal, newVal: string) {
+    if (!this._ready) return;
+
     switch (attrName) {
       case 'phone-number':
         this.updateByPhoneNumber(newVal);
