@@ -47,7 +47,6 @@ module.exports = {
     })
   ],
   devServer: {
-    contentBase: output,
     compress: true,
     port: 9000,
   },
