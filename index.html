@@ -5,15 +5,17 @@
     <title>Demo</title>
 </head>
 <body>
-<country-phone-select
-        id="sys-tags-Client.PrimaryPhone"
-        required=""
-        value="2012224321"
-        name="sys-tags-Client.PrimaryPhone"
-        data-options="Client.PrimaryPhone:false:true"
-        country-code=""
-        country-phone-code="1"
-></country-phone-select>
 
+<progress-bar
+    current-value="20"
+    max-value="300"
+></progress-bar>
+
+<script>
+    const progressBar = document.querySelector('progress-bar');
+    setInterval(() => {
+      progressBar.currentValue += 1;
+    }, 100);
+</script>
 </body>
 </html>
